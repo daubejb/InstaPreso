@@ -58,11 +58,17 @@ function createPreso() {
   Logger.log(text)
   Logger.log(text.length)
 
-  var slides = []
+  
   var dividerPositions = getDividerPositions(text)
+  
   var slides = getSlideContent(text, dividerPositions)
-  Logger.log(dividerPositions)
-  Logger.log(slides)
+  
+  for (var i = 0; i < slides.length; i++) {
+    var type = slides[i].substring(0, 7)
+    if (type === 'Title: ') {
+      createTitleSlide(slides[i])
+    }
+  }
 }
 //================================================================GET DIVIDER POSITIONS
 function getDividerPositions(t) {
@@ -79,8 +85,9 @@ function getDividerPositions(t) {
 }
 //================================================================GET SLIDE CONTENT
 function getSlideContent(t, dP) {
+var slides = []
 var slideCount = (t.match(/---/g).length)
-  for (var j = 0; j < numberOfSlides; j++) {
+  for (var j = 0; j < slideCount; j++) {
     if (j === 0) {
       slides[j] = t.slice(0, dP[j])
     } else {
@@ -91,24 +98,34 @@ var slideCount = (t.match(/---/g).length)
 }
 //================================================================CREATE TITLE SLIDE
 
-function createTitleSlide() {
-  var title = body.findText('Title: ').getElement().asText().getText().slice(7)
-  Logger.log(title)
-
-  var subtitle = body.findText('Subtitle: ').getElement().asText().getText().slice(10)
-  Logger.log(subtitle)
-
-  var preso = SlidesApp.create(title)
-
-  var defaultTitleSlide = preso.getSlides()[0]
-  defaultTitleSlide.remove()
+function createTitleSlide(text) {
+  Logger.log(text)
+  var elements = text.split('\n')
+  Logger.log(elements)
+  for (var i = 0; i < elements.length; i++ ) {
+    var el = elements[i]
+    Logger.log(el)
+    var elType = el.slice(0, 7)
+    switch (elType) {
+      case 'Title: ': var title = el.slice(7); break
+      case 'Subtitl': var subtitle = el.slice(10); break
+    }
+  }
+  
+  var preso = createAndFormatDefaultPreso(title)  
 
   var titleSlide = preso.insertSlide(0, SlidesApp.PredefinedLayout.TITLE)
   var titleSlideElements = titleSlide.getPageElements()
   var titleElement = titleSlideElements[0].asShape().getText().setText(title)
   var subtitleElement = titleSlideElements[1].asShape().getText().setText(subtitle)
 }
-
+//================================================================CREATE AND FORMAT DEFAULT PRESO
+function createAndFormatDefaultPreso(title) {
+  var preso = SlidesApp.create(title)
+  var defaultTitleSlide = preso.getSlides()[0]
+  defaultTitleSlide.remove()
+  return preso
+}
 //================================================================CREATE LAYOUT
 
 function createLayout() {
