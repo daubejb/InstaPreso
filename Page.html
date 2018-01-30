@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <style>
+      body {
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="button" class="blue" value="Create preso" onclick='createPreso()'/>
+    <input type="button" class="blue" value="Create layout" onclick='createLayout()'/>
+    <script>
+      function createPreso() {
+        try {
+          console.log("create preso button clicked");
+          google.script.run.createPreso();
+        } catch (err) {
+          google.script.run.displayAlert(err);
+        }
+      }
+      function createLayout() {
+        try {
+          console.log("create layout button clicked");
+          google.script.run.createLayout();
+        } catch (err) {
+          google.script.run.displayAlert(err);
+        }
+      }
+    </script>
+  </body>
+</html>
